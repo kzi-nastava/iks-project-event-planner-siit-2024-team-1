@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output,EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AccordionModule } from 'primeng/accordion';
 import { ButtonModule } from 'primeng/button';
@@ -7,6 +7,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { SliderModule } from 'primeng/slider';
+import { FilterFormValues } from './form-values';
+import { SearchService } from '../search.service';
 
 @Component({
   selector: 'app-filter',
@@ -17,8 +19,9 @@ import { SliderModule } from 'primeng/slider';
 })
 export class FiltersComponent {
   filterForm: FormGroup;
+  @Output() filterValuesEmmiter = new EventEmitter<FilterFormValues>();
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private searchService:SearchService) {
     this.filterForm = this.fb.group({
       showEvents: [true],
       showServices: [true],
@@ -47,7 +50,38 @@ export class FiltersComponent {
     });
   }
 
+  resetFilters() {
+    this.filterForm.reset({
+      showEvents: true,         // Set the default value for showEvents
+      showServices: true,       // Set the default value for showServices
+      showProducts: true,       // Set the default value for showProducts
+      events: {
+        eventDate: '',          // Reset eventDate to an empty string
+        type: '',               // Reset type to an empty string
+        city: ''                // Reset city to an empty string
+      },
+      services: {
+        priceMin: '',           // Reset priceMin to an empty string
+        priceMax: '',           // Reset priceMax to an empty string
+        category: '',           // Reset category to an empty string
+        durationMin: '',        // Reset durationMin to an empty string
+        durationMax: '',        // Reset durationMax to an empty string
+        city: ''                // Reset city to an empty string
+      },
+      products: {
+        priceMin: '',           // Reset priceMin to an empty string
+        priceMax: '',           // Reset priceMax to an empty string
+        category: '',           // Reset category to an empty string
+        durationMin: '',        // Reset durationMin to an empty string
+        durationMax: '',        // Reset durationMax to an empty string
+        city: ''                // Reset city to an empty string
+      }
+    });
+    this.applyFilters();
+  }
+  
+
   applyFilters(): void {
-    console.log(this.filterForm.value);
+    this.searchService.updateFilters(this.filterForm.value);
   }
 }

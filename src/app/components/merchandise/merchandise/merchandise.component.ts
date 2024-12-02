@@ -17,6 +17,11 @@ import { SidebarModule } from 'primeng/sidebar';
 import { Merchandise } from '../../merchandise/merchandise';
 import { MerchandiseService } from '../../merchandise/merchandise.service';
 import { MerchandiseOverviewDTO } from '../merchandise-overview-dto';
+import { ProductFilters } from '../../product/product-filters';
+import { SearchService } from '../../search-page/search.service';
+import { ProductService } from '../../product/product.service';
+import { ServiceFilters } from '../../service/service-filters';
+import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 
 interface PageEvent {
   first: number;
@@ -53,9 +58,12 @@ export class MerchandiseComponent {
   public first: number = 0;
   public rows: number = 3;
   public totalRecords: number = 0;
+  searchValue: string = '';
+  productFilterValues: ProductFilters | null = null;
+  serviceFilterValues: ServiceFilters | null = null;
   @Input() panelTitle: string = '';
   @Input() panelType: string = '';
-  constructor(private merchandiseService: MerchandiseService) { }
+  constructor(private merchandiseService: MerchandiseService, private searchService: SearchService) { }
 
   async ngOnInit() {
     switch (this.panelType) {
@@ -71,18 +79,43 @@ export class MerchandiseComponent {
           });
           break;
         }
-      default: {
-        this.merchandiseService.getAll().subscribe({
-          next: (data: MerchandiseOverviewDTO[]) => {
-            this.merchandise = data;
-            this.totalRecords = this.merchandise.length;
-            this.updateDisplayedEvents();
+      case "Search":
+      case "search": {
+        combineLatest([
+          this.searchService.search$,
+          this.searchService.productFilters$,
+          this.searchService.serviceFilters$
+        ]).pipe(
+
+          distinctUntilChanged(),
+
+          debounceTime(300)
+        ).subscribe({
+          next: ([searchValue, productFilters, serviceFilters]) => {
+            this.searchValue = searchValue;
+            this.productFilterValues = productFilters;
+            this.serviceFilterValues = serviceFilters;
+
+            // Single search trigger
+            this.merchandiseService.search(
+              this.serviceFilterValues,
+              this.productFilterValues,
+              this.searchValue
+            ).subscribe({
+              next: (data: MerchandiseOverviewDTO[]) => {
+                this.merchandise = data;
+                this.totalRecords = this.merchandise.length;
+                this.updateDisplayedEvents();
+              }
+            });
           }
         });
         break;
       }
     }
   }
+
+
 
   updateDisplayedEvents() {
     const end = this.first + this.rows;

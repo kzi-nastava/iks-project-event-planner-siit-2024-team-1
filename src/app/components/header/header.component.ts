@@ -20,6 +20,7 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { ThemeService } from '../../theme.service';
 import { SideMenuComponent } from "../side-menu/side-menu.component";
 import { Router } from '@angular/router';
+import { SearchService } from '../search-page/search.service';
 
 @Component({
   selector: 'app-header',
@@ -33,8 +34,9 @@ export class HeaderComponent {
   username: string = "Goci Ristic";
   sidemenuVisible: boolean = false;
   notificationsVisible: boolean = false;
+  searchText:string='';
   
-  constructor(private themeService:ThemeService, private router: Router){}
+  constructor(private themeService:ThemeService, private router: Router,private searchService:SearchService){}
 
     changeTheme() {
         this.themeService.changeTheme();
@@ -70,4 +72,8 @@ export class HeaderComponent {
     logout(){
         this.router.navigate(['']);
     }
+    onSearchChange() {
+        this.searchService.updateSearch(this.searchText);
+        
+      }
 }

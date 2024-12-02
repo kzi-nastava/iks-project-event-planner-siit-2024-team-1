@@ -10,7 +10,7 @@
     />
     <span class="p-input-icon-left">
       <i class="pi pi-search"></i>
-      <input pInputText placeholder="Search" />
+      <input pInputText placeholder="Search" [(ngModel)]="searchText" (keyup.enter)="onSearchChange()" />
     </span>
   </div>
   <div class="p-toolbar-group-end">

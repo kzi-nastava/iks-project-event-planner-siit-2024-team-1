@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
@@ -19,6 +19,8 @@ import { SidebarModule } from 'primeng/sidebar';
 import { Merchandise } from '../../merchandise/merchandise';
 import { MerchandiseService } from '../../merchandise/merchandise.service';
 import { EventOverviewDTO } from '../event-overview-dto';
+import { EventFilters } from '../event-filters';
+import { SearchService } from '../../search-page/search.service';
 
 interface PageEvent {
   first: number;
@@ -54,16 +56,17 @@ export class EventsComponent implements OnInit {
   public displayedEvents: EventOverviewDTO[] = [];
   public sortOptions: string[] = [];
   public filterSidebarVisible = false;
+  searchValue: string = '';
+  filterValues: EventFilters | null = null;
   // Pagination properties
   public first: number = 0;
   public rows: number = 3;
   public totalRecords: number = 0;
   @Input() panelTitle: string = '';
   @Input() panelType: string = '';
-  constructor(private eventService: EventService, private merchandiseService: MerchandiseService) { }
+  constructor(private eventService: EventService, private searchService: SearchService) { }
 
   async ngOnInit() {
-    console.log("asd");
     switch (this.panelType) {
       case 'Top':
       case 'top':
@@ -74,27 +77,46 @@ export class EventsComponent implements OnInit {
               this.totalRecords = this.events.length;
               this.updateDisplayedEvents();
             }
-          })
+          });
           break;
         }
-      default: {
-        this.eventService.getAll().subscribe({
-          next: (data: EventOverviewDTO[]) => {
-            this.events = data;
-            this.totalRecords = this.events.length;
-            this.updateDisplayedEvents();
+      case "Search":
+      case "search": {
+        this.searchService.search$.subscribe({
+          next: (data: string) => {
+            this.searchValue = data;
+            this.triggerEventSearch();
           }
         });
+        this.searchService.eventFilters$.subscribe({
+          next: (data: EventFilters) => {
+            this.filterValues = data;
+            this.triggerEventSearch();
+          }
+        });
+        this.triggerEventSearch();
         break;
       }
     }
   }
 
   updateDisplayedEvents() {
-    console.log(this.events)
     const end = this.first + this.rows;
     this.displayedEvents = this.events.slice(this.first, end);
   }
+
+
+  triggerEventSearch() {
+    this.eventService.search(this.filterValues, this.searchValue).subscribe({
+      next: (data: EventOverviewDTO[]) => {
+        this.events = data;
+        this.totalRecords = this.events.length;
+        this.updateDisplayedEvents();
+      }
+    });
+  }
+
+
 
   onPageChange(event: PageEvent) {
     this.first = event.first;

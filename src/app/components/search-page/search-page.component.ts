@@ -3,6 +3,7 @@ import { EventsComponent } from "../event/events/events.component";
 import { MerchandiseComponent } from "../merchandise/merchandise/merchandise.component";
 import { SearchHeaderComponent } from "./search-header/search-header.component";
 
+
 @Component({
   selector: 'app-search-page',
   standalone: true,
@@ -11,5 +12,4 @@ import { SearchHeaderComponent } from "./search-header/search-header.component";
   styleUrl: './search-page.component.scss'
 })
 export class SearchPageComponent {
-  
 }

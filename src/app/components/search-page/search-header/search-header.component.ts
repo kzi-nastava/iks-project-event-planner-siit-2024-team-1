@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 
@@ -21,10 +21,12 @@ export class SearchHeaderComponent implements OnInit{
   public merchandiseSortOptions!:string[];
   public selectedMerchandiseSortOption:string='';
   public filtersVisible:boolean=false;
+
   constructor(private eventService:EventService,private merchandiseService:MerchandiseService){}
   ngOnInit(): void {
     this.eventSortOptions=this.eventService.SortOptions;
     this.merchandiseSortOptions=this.merchandiseService.SortOptions;
   }
+
 
 }
