@@ -1,4 +1,4 @@
-import { Component, OnInit, PLATFORM_ID, Inject, Input, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, PLATFORM_ID, Inject, Input, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MapService } from './map.service';
 import { LeafletHelper } from './leaflet.helper';
@@ -28,12 +28,14 @@ import { combineLatest } from 'rxjs';
   ],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss',
-  encapsulation:ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None
 })
 export class MapComponent implements OnInit {
   @Input() showEvents: boolean = false;
   @Input() showProducts: boolean = false;
   @Input() showServices: boolean = false;
+  @Input() showSearch: boolean = false;
+  @Input() showLegend: boolean = true;
 
 
   private map: any;
@@ -46,6 +48,7 @@ export class MapComponent implements OnInit {
   private markerIcons: { [key: string]: any } = {};
   lat = 45.25710603831593;
   lng = 19.84540080257916;
+  @Output() addressSelected = new EventEmitter<AddressDTO>();
 
   constructor(
     private leafletHelper: LeafletHelper,
@@ -58,8 +61,8 @@ export class MapComponent implements OnInit {
       this.leafletHelper.loadLeaflet().then((L) => {
         this.L = L;
         this.initializeMarkerIcons();
-        this.initMap(L);
-        
+        this.initMap();
+
         if (this.showEvents) {
           this.mapService.eventAddresses$.subscribe(addresses => {
             this.markAllAddresses(addresses, 'event');
@@ -79,7 +82,9 @@ export class MapComponent implements OnInit {
         }
       });
     }
-}
+  }
+
+  
 
   markAllAddresses(addresses: AddressDTO[], type: string = 'default') {
     this.currentMarkers[type].forEach((marker: any) => this.map.removeLayer(marker));
@@ -113,10 +118,10 @@ export class MapComponent implements OnInit {
     };
   }
 
-  private initMap(L: any): void {
-    this.map = L.map('map', {
+  public initMap(): void {
+    this.map = this.L.map('map', {
       layers: [
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        this.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 21,
           maxNativeZoom: 19,
           minZoom: 3,
@@ -125,12 +130,14 @@ export class MapComponent implements OnInit {
         }),
       ],
       zoom: 13,
-      center: L.latLng(this.lat, this.lng),
+      center: this.L.latLng(this.lat, this.lng),
     });
-    //this.registerOnClick(L);
+    if (this.showSearch)
+      this.registerOnClick(this.L);
+    this.map.invalidateSize();
   }
 
-  
+
 
 
   private addMarker(lat: number | undefined | null, lng: number | undefined | null, type: string = 'default', popupContent?: string) {
@@ -148,9 +155,13 @@ export class MapComponent implements OnInit {
 
   private registerOnClick(L: any): void {
     this.map.on('click', (e: any) => {
+      this.searchMarkers.forEach(marker => this.map.removeLayer(marker));
+      this.searchMarkers = [];
       const { lat, lng } = e.latlng;
       this.performReverseSearch(lat, lng);
-      this.addMarker(lat, lng);
+      const marker = this.addMarker(lat, lng);
+      this.searchMarkers.push(marker);
+      this.map.setView([lat, lng], 15);
     });
   }
 
@@ -170,9 +181,15 @@ export class MapComponent implements OnInit {
 
   private performReverseSearch(lat: number, lng: number): void {
     this.mapService.reverseSearch(lat, lng).subscribe({
-      next: (res: { display_name: string }) => {
-        console.log(res.display_name + " lat: " + lat + " lng: " + lng);
-        this.addMarker(lat, lng, 'default', res.display_name)
+      next: (res) => {
+        const address: AddressDTO = {
+          street: res.street,
+          city: res.city,
+          number: res.number,
+          latitude: Number(lat),
+          longitude: Number(lng)
+        };
+        this.addressSelected.emit(address);
       },
       error: (err) => {
         console.error('Reverse search error', err);
@@ -180,11 +197,12 @@ export class MapComponent implements OnInit {
     });
   }
 
+
   selectSearchResult(result: any): void {
     this.searchMarkers.forEach(marker => this.map.removeLayer(marker));
     this.searchMarkers = [];
 
-
+    this.performReverseSearch(result.value.lat,result.value.lon);
     const marker = this.addMarker(result.value.lat, result.value.lon, 'default', result.value.display_name);
     this.searchMarkers.push(marker);
     this.map.setView([result.value.lat, result.value.lon], 15);

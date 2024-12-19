@@ -19,6 +19,8 @@ import { RecommendCategoryComponent } from '../category/recommend-category/recom
 import { CreateMerchandisePhotoDTO, PhotoToAdd } from '../merchandise/merchandise-photos-request-dto';
 import { CommonModule } from '@angular/common';
 import { PhotoService } from '../photos/photo.service';
+import { MapComponent } from "../map/map.component";
+import { AddressDTO } from '../auth/register-dtos/address.dto';
 
 @Component({
   selector: 'app-create-product',
@@ -32,7 +34,8 @@ import { PhotoService } from '../photos/photo.service';
     ReactiveFormsModule,
     CommonModule,
     DialogModule,
-    RecommendCategoryComponent
+    RecommendCategoryComponent,
+    MapComponent
   ],
   templateUrl: './create-product.component.html',
   styleUrls: ['./create-product.component.scss'],
@@ -57,13 +60,15 @@ export class CreateProductComponent {
     price: new FormControl(null, [Validators.required, Validators.min(0)]),
     discount: new FormControl(null, [Validators.min(0), Validators.max(100)]),
     category: new FormControl(null, [Validators.required]),
-    city: new FormControl(null, [Validators.required]),
-    street: new FormControl(null, [Validators.required]),
-    number: new FormControl(null, [Validators.required]),
-    eventTypes: new FormControl([]), 
+    city: new FormControl<string|null|undefined>(null, [Validators.required]),
+    street: new FormControl<string|null|undefined>(null, [Validators.required]),
+    number: new FormControl<string|null|undefined>(null, [Validators.required]),
+    latitude:new FormControl<number|null|undefined>(null, [Validators.required]),
+    longitude:new FormControl<number|null|undefined>(null, [Validators.required]),
+    eventTypes: new FormControl([]),
     minDuration: new FormControl(null, [Validators.required, Validators.min(0)]),
     maxDuration: new FormControl(null, [Validators.required, Validators.min(0)]),
-    duration: new FormControl(null), 
+    duration: new FormControl(null),
     reservationDeadline: new FormControl(null, [Validators.required, Validators.min(0)]),
     cancellationDeadline: new FormControl(null, [Validators.required, Validators.min(0)]),
     automaticReservation: new FormControl(false),
@@ -72,7 +77,7 @@ export class CreateProductComponent {
 
   constructor(private eventTypeService: EventTypeService, private categoryService: CategoryService, private productService: ProductService, private jwtService: JwtService,
     private photoService: PhotoService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadData();
@@ -90,28 +95,38 @@ export class CreateProductComponent {
   uploadFile($event: any): void {
     const files = $event.target.files as File[];
     if (files && files.length > 0) {
-        const file = files[0]; 
+      const file = files[0];
 
-        const photosArray = this.addProductForm.get('merchandisePhotos') as FormArray;
+      const photosArray = this.addProductForm.get('merchandisePhotos') as FormArray;
 
-        // Check if the file name already exists in the array
-        const existingPhoto = photosArray.value.find((photo: { photo: string }) => photo.photo === file.name);
-        
-        if (!existingPhoto) {
-            this.addPhoto(file.name); 
-            this.photoService.uploadMerchandisePhoto(file).pipe(tap(response => {
-                this.photosToAdd.push({
-                  id: response,
-                  photo: file.name
-                })
-            })).subscribe();
-        } else {
-            console.log('File already exists, skipping upload.');
-        }
+      // Check if the file name already exists in the array
+      const existingPhoto = photosArray.value.find((photo: { photo: string }) => photo.photo === file.name);
+
+      if (!existingPhoto) {
+        this.addPhoto(file.name);
+        this.photoService.uploadMerchandisePhoto(file).pipe(tap(response => {
+          this.photosToAdd.push({
+            id: response,
+            photo: file.name
+          })
+        })).subscribe();
+      } else {
+        console.log('File already exists, skipping upload.');
+      }
     }
-}
+  }
 
-  getPhotoUrl(photo: string): string{
+  onAddressSelected(address: AddressDTO) {
+    this.addProductForm.patchValue({
+      city: address.city,
+      street: address.street,
+      number: address.number,
+      latitude:address.latitude,
+      longitude:address.longitude
+    });
+  }
+
+  getPhotoUrl(photo: string): string {
     return this.photoService.getPhotoUrl(photo);
   }
 
@@ -129,30 +144,30 @@ export class CreateProductComponent {
   }
 
   removePhoto(index: number): void {
-  const photosArray = this.addProductForm.get('merchandisePhotos') as FormArray;
+    const photosArray = this.addProductForm.get('merchandisePhotos') as FormArray;
 
-  // Get the photo name from the form array
-  const photoName = photosArray.at(index).value.photo;
+    // Get the photo name from the form array
+    const photoName = photosArray.at(index).value.photo;
 
-  this.photoService.deleteMercPhoto(this.photosToAdd.find(photo => photo.photo === photoName)?.id, -1, false).pipe(
-    tap(response => {
+    this.photoService.deleteMercPhoto(this.photosToAdd.find(photo => photo.photo === photoName)?.id, -1, false).pipe(
+      tap(response => {
 
-    })
-  ).subscribe();
+      })
+    ).subscribe();
 
-  // Remove the corresponding photo from photosToAdd by matching the photo name
-  const photoIndex = this.photosToAdd.findIndex(photo => photo.photo === photoName);
-  if (photoIndex !== -1) {
-    this.photosToAdd.splice(photoIndex, 1);
+    // Remove the corresponding photo from photosToAdd by matching the photo name
+    const photoIndex = this.photosToAdd.findIndex(photo => photo.photo === photoName);
+    if (photoIndex !== -1) {
+      this.photosToAdd.splice(photoIndex, 1);
+    }
+
+
+    // Remove the photo from the FormArray
+    photosArray.removeAt(photoIndex);
+
+    // Update the list of photos to show
+    this.updatePhotosToShow();
   }
-
-
-  // Remove the photo from the FormArray
-  photosArray.removeAt(photoIndex);
-
-  // Update the list of photos to show
-  this.updatePhotosToShow();
-}
 
 
   getPhotos(): CreateMerchandisePhotoDTO[] {
@@ -171,8 +186,8 @@ export class CreateProductComponent {
         city: this.addProductForm.controls.city.value,
         street: this.addProductForm.controls.street.value,
         number: this.addProductForm.controls.number.value,
-        latitude: 0,
-        longitude: 0
+        latitude: this.addProductForm.controls.latitude.value,
+        longitude: this.addProductForm.controls.longitude.value
       },
       visible: true,
       available: true,

@@ -11,10 +11,12 @@ import { tap } from 'rxjs';
 import { JwtService } from '../auth/jwt.service';
 import { PhotoService } from '../photos/photo.service';
 import { CreateBusinessPhotoDTO, CreateMerchandisePhotoDTO, PhotoToAdd } from '../merchandise/merchandise-photos-request-dto';
+import { MapComponent } from '../map/map.component';
+import { AddressDTO } from '../auth/register-dtos/address.dto';
 @Component({
   selector: 'app-register-sp-form',
   standalone: true,
-  imports: [ButtonModule, ReactiveFormsModule, FileUploadModule, ToastModule, CommonModule],
+  imports: [ButtonModule, ReactiveFormsModule, FileUploadModule,MapComponent, ToastModule, CommonModule],
   templateUrl: './register-sp-form.component.html',
   styleUrl: './register-sp-form.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -34,7 +36,7 @@ export class RegisterSpFormComponent {
     surname: new FormControl(''),
     city: new FormControl(''),
     street: new FormControl(''),
-    number: new FormControl<number | null>(1),
+    number: new FormControl<string | null>(""),
     latitude: new FormControl<number | null>(1),
     longitude: new FormControl<number | null>(1),
     phone: new FormControl(''),
@@ -47,6 +49,17 @@ export class RegisterSpFormComponent {
   })
   
   constructor(private router: Router, private jwtService: JwtService, private photoService: PhotoService){}
+
+  onAddressSelected(address: AddressDTO) {
+    this.registerForm.patchValue({
+      city: address.city,
+      street: address.street,
+      number: address.number,
+      latitude:address.latitude,
+      longitude:address.longitude
+    });
+  }
+
 
   createAccount(): void{
     if(this.registerForm.controls.password1.value != this.registerForm.controls.password2.value){

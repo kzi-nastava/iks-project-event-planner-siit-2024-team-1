@@ -20,6 +20,8 @@ import { response } from 'express';
 import { PhotoService } from '../photos/photo.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { MapComponent } from '../map/map.component';
+import { AddressDTO } from '../auth/register-dtos/address.dto';
 
 @Component({
   selector: 'app-update-product',
@@ -33,7 +35,8 @@ import { ActivatedRoute } from '@angular/router';
     ReactiveFormsModule,
     DialogModule,
     RecommendCategoryComponent,
-    CommonModule
+    CommonModule,
+    MapComponent
   ],
   templateUrl: './update-product.component.html',
   styleUrl: './update-product.component.scss'
@@ -63,7 +66,9 @@ export class UpdateProductComponent {
     discount: new FormControl<number | undefined | null>(null, [Validators.min(0), Validators.max(100)]),
     city: new FormControl<string | undefined | null>(null, [Validators.required]),
     street: new FormControl<string | undefined | null>(null, [Validators.required]),
-    number: new FormControl<number | undefined | null>(null, [Validators.required]),
+    number: new FormControl<string | undefined | null>(null, [Validators.required]),
+    latitude:new FormControl<number|null|undefined>(null, [Validators.required]),
+    longitude:new FormControl<number|null|undefined>(null, [Validators.required]),
     eventTypes: new FormControl([]), 
     minDuration: new FormControl<number | undefined | null>(null, [Validators.required, Validators.min(0)]),
     maxDuration: new FormControl<number | undefined | null>(null, [Validators.required, Validators.min(0)]),
@@ -79,7 +84,15 @@ export class UpdateProductComponent {
   ){
 
   }
-
+  onAddressSelected(address: AddressDTO) {
+    this.addProductForm.patchValue({
+      city: address.city,
+      street: address.street,
+      number: address.number,
+      latitude:address.latitude,
+      longitude:address.longitude
+    });
+  }
   ngOnInit(){
     this.loadData();
   }
@@ -236,7 +249,7 @@ export class UpdateProductComponent {
       address: {
         city: this.addProductForm.controls.city.value,
         street: this.addProductForm.controls.street.value,
-        number: this.addProductForm.controls.number.value,
+        number: "",
         latitude: 0,
         longitude: 0
       },

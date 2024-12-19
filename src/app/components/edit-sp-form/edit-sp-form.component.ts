@@ -12,11 +12,13 @@ import { CreateMerchandisePhotoDTO, PhotoToAdd } from '../merchandise/merchandis
 import { PhotoService } from '../photos/photo.service';
 import { UserService } from '../user/user.service';
 import { response } from 'express';
+import { MapComponent } from '../map/map.component';
+import { AddressDTO } from '../auth/register-dtos/address.dto';
 
 @Component({
   selector: 'app-edit-sp-form',
   standalone: true,
-  imports: [ButtonModule, ReactiveFormsModule, FileUploadModule, ToastModule, CommonModule],
+  imports: [ButtonModule, ReactiveFormsModule,MapComponent, FileUploadModule, ToastModule, CommonModule],
   templateUrl: './edit-sp-form.component.html',
   styleUrl: './edit-sp-form.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -31,6 +33,8 @@ export class EditSpFormComponent {
 
   spId!: number;
   fbl: FormBuilder = new FormBuilder();
+  
+
 
   registerForm = new FormGroup({
     company: new FormControl({value: '', disabled: true}),
@@ -39,7 +43,7 @@ export class EditSpFormComponent {
     surname: new FormControl('', [Validators.required]),
     city: new FormControl('', [Validators.required]),
     street: new FormControl('', [Validators.required]),
-    number: new FormControl<number | null>(1),
+    number: new FormControl<string | null>(""),
     latitude: new FormControl<number | null>(1),
     longitude: new FormControl<number | null>(1),
     phone: new FormControl('', [Validators.required]),
@@ -51,7 +55,15 @@ export class EditSpFormComponent {
   ngOnInit(){
     this.loadData();
   }
-
+  onAddressSelected(address: AddressDTO) {
+    this.registerForm.patchValue({
+      city: address.city,
+      street: address.street,
+      number: address.number,
+      latitude:address.latitude,
+      longitude:address.longitude
+    });
+  }
   loadData(): void{
     const id = this.route.snapshot.paramMap.get('id');
     this.spId = id ? Number(id) : -1;

@@ -48,6 +48,11 @@
             class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50"
           />
         </div>
+        <div class="field mb-8">
+          <span>Choose address</span>
+          <app-map [showSearch]="true" [showLegend]="false" (addressSelected)="onAddressSelected($event)">
+          </app-map>
+      </div>
         <div class="field flex justify-content-center">
           <div class="grid">
             <div class="col-4">

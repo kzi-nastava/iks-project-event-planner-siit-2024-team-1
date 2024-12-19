@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ToolbarModule } from 'primeng/toolbar';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { InputTextModule } from 'primeng/inputtext';
@@ -28,7 +28,8 @@ import { JwtService } from '../auth/jwt.service';
   standalone: true,
   imports: [ToolbarModule, ScrollPanelModule, DialogModule, SplitButtonModule, InputTextModule, ButtonModule, InputIconModule, IconFieldModule, FormsModule, AvatarModule, AvatarGroupModule, MenubarModule, SidebarModule,  SidebarNotificationsComponent, SideMenuComponent],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrl: './header.component.scss',
+  encapsulation:ViewEncapsulation.None
 })
 export class HeaderComponent {
   items: MenuItem[] | undefined;

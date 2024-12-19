@@ -11,11 +11,13 @@ import { tap } from 'rxjs';
 import { RegisterEoDto } from '../auth/register-dtos/RegisterEo.dto';
 import { Role } from '../auth/register-dtos/role.dto';
 import { copyFileSync } from 'fs';
+import { MapComponent } from '../map/map.component';
+import { AddressDTO } from '../auth/register-dtos/address.dto';
 
 @Component({
   selector: 'app-register-eo-form',
   standalone: true,
-  imports: [ButtonModule, ReactiveFormsModule, FileUploadModule, ToastModule, CommonModule],
+  imports: [ButtonModule, ReactiveFormsModule, FileUploadModule,MapComponent, ToastModule, CommonModule],
   templateUrl: './register-eo-form.component.html',
   styleUrl: './register-eo-form.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -28,7 +30,7 @@ export class RegisterEoFormComponent {
     surname: new FormControl(''),
     city: new FormControl(''),
     street: new FormControl(''),
-    number: new FormControl<number | null>(1),
+    number: new FormControl<string | null>(""),
     latitude: new FormControl<number | null>(1),
     longitude: new FormControl<number | null>(1),
     phone: new FormControl(''),
@@ -36,6 +38,15 @@ export class RegisterEoFormComponent {
     password1: new FormControl(''),
     password2: new FormControl(''),
   })
+  onAddressSelected(address: AddressDTO) {
+    this.registerForm.patchValue({
+      city: address.city,
+      street: address.street,
+      number: address.number,
+      latitude:address.latitude,
+      longitude:address.longitude
+    });
+  }
   
   constructor(private router: Router, private jwtService: JwtService){}
 

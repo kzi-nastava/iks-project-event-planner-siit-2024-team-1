@@ -21,11 +21,13 @@ import { CreateEventTypeResponseDTO } from '../create-event-type-form/dtos/creat
 import { CreateEventDTO } from '../my-events/dtos/CreateEvent.dto';
 import { JwtService } from '../auth/jwt.service';
 import { EventService } from '../event/event.service';
+import { MapComponent } from '../map/map.component';
+import { AddressDTO } from '../auth/register-dtos/address.dto';
 
 @Component({
   selector: 'app-create-event-form',
   standalone: true,
-  imports: [CommonModule, DropdownModule, FormsModule, MultiSelectModule, RadioButtonModule, ButtonModule, ReactiveFormsModule, CalendarModule, CheckboxModule, SendInvitationComponent, DialogModule],
+  imports: [CommonModule, DropdownModule, FormsModule,MapComponent, MultiSelectModule, RadioButtonModule, ButtonModule, ReactiveFormsModule, CalendarModule, CheckboxModule, SendInvitationComponent, DialogModule],
   templateUrl: './create-event-form.component.html',
   styleUrl: './create-event-form.component.scss'
 })
@@ -36,7 +38,7 @@ export class CreateEventFormComponent {
     date: new FormControl<Date | null>(new Date()),
     city: new FormControl(''),
     street: new FormControl(''),
-    number: new FormControl<number | null>(1),
+    number: new FormControl<string | null>(""),
     latitude: new FormControl<number | null>(1),
     longitude: new FormControl<number | null>(1),
     maxParticipants: new FormControl<number | null>(-1),
@@ -54,6 +56,17 @@ export class CreateEventFormComponent {
 
   selectedServices: any[] = []
   selectedProducts: any[] = []
+
+    onAddressSelected(address: AddressDTO) {
+        this.addEventTypeForm.patchValue({
+          city: address.city,
+          street: address.street,
+          number: address.number,
+          latitude:address.latitude,
+          longitude:address.longitude
+        });
+      }
+    
 
   ngOnInit(){
       this.serviceService.getAll().pipe(tap(response => {

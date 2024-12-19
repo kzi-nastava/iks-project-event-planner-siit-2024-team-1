@@ -1,4 +1,4 @@
-<p-table [value]="activities" class="w-full" [responsiveLayout]="'scroll'">
+<p-table [value]="activities" class="w-full" [responsiveLayout]="'scroll'" *ngIf="event">
     <ng-template pTemplate="caption">
       <div class="flex align-items-center justify-content-between">
         <h2>{{"Agenda For Event: " + this.event.title}}</h2>

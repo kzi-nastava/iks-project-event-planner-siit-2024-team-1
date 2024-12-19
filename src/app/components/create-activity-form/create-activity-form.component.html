@@ -1,97 +1,56 @@
 <div class="flex justify-content-center pt-4 w-full h-full">
-    <div class="w-full h-full">
-      <div class="flex w-full content surface-100 justify-content-center">
-        <form
-          [formGroup]="addActivityForm"
-          class="flex pt-4 flex-column w-full px-4"
-        >
-          <div class="field flex justify-content-center">
-            <input
-              formControlName="title"
-              type="text"
-              placeholder="Title*"
-              name="title"
-              class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50"
-            />
-          </div>
-          <div class="field flex justify-content-center">
-            <div class="grid">
-              <div class="col-4">
-                <input
-                  formControlName="city"
-                  type="text"
-                  placeholder="City*"
-                  class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50"
-                />
-              </div>
-              <div class="col-4">
-                <input
-                  formControlName="street"
-                  type="text"
-                  placeholder="Street*"
-                  class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50"
-                />
-              </div>
-              <div class="col-4">
-                <input
-                  formControlName="number"
-                  type="number"
-                  placeholder="Number*"
-                  class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50"
-                />
-              </div>
+  <div class="w-full h-full">
+    <div class="flex w-full content surface-100 justify-content-center">
+      <form [formGroup]="addActivityForm" class="flex pt-4 flex-column w-full px-4">
+
+        <div class="field flex justify-content-center">
+          <input formControlName="title" type="text" placeholder="Title*" name="title"
+            class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50" />
+        </div>
+        <div class="field flex justify-content-center">
+          <div class="grid">
+            <div class="col-4">
+              <input formControlName="city" type="text" placeholder="City*"
+                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50" />
+            </div>
+            <div class="col-4">
+              <input formControlName="street" type="text" placeholder="Street*"
+                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50" />
+            </div>
+            <div class="col-4">
+              <input formControlName="number" type="text" placeholder="Number*"
+                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50" />
             </div>
           </div>
-          <div class="field flex justify-content-center">
-            <div class="grid">
-              <div class="col-6">
-                <input
-                  formControlName="latitude"
-                  type="number"
-                  placeholder="Latitude*"
-                  class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50"
-                />
-              </div>
-              <div class="col-6">
-                <input
-                  formControlName="longitude"
-                  type="number"
-                  placeholder="Longitude*"
-                  class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50"
-                />
-              </div>
+        </div>
+        <div class="field flex justify-content-center">
+          <div class="grid">
+            <div class="col-6">
+              <input formControlName="latitude" type="number" placeholder="Latitude*"
+                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50" />
+            </div>
+            <div class="col-6">
+              <input formControlName="longitude" type="number" placeholder="Longitude*"
+                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50" />
             </div>
           </div>
-          <div class="field flex justify-content-center">
-            <textarea
-              formControlName="description"
-              cols="40"
-              rows="5"
-              placeholder="Description*"
-              class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 max-h-7rem surface-50"
-            ></textarea>
-          </div>
-          <div class="field flex justify-content-center">
-            <input
-              type="time"
-              formControlName="start"
-              placeholder="Start*"
-              class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50"
-            />
-          </div>
-          <div class="field flex justify-content-center mb-6">
-            <input
-              type="time"
-              formControlName="end"
-              placeholder="End*"
-              class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50"
-            />
-          </div>
-          <div class="field flex justify-content-center mt-8">
-            <p-button styleClass="mt-8" (onClick)="createActivity()">ADD ACTIVITY</p-button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div class="field flex justify-content-center">
+          <textarea formControlName="description" cols="40" rows="5" placeholder="Description*"
+            class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 max-h-7rem surface-50"></textarea>
+        </div>
+        <div class="field flex justify-content-center">
+          <input type="time" formControlName="start" placeholder="Start*"
+            class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50" />
+        </div>
+        <div class="field flex justify-content-center mb-6">
+          <input type="time" formControlName="end" placeholder="End*"
+            class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50" />
+        </div>
+        <div class="field flex justify-content-center mt-8">
+          <p-button styleClass="mt-8" (onClick)="createActivity()">ADD ACTIVITY</p-button>
+        </div>
+      </form>
     </div>
   </div>
-  
+</div>

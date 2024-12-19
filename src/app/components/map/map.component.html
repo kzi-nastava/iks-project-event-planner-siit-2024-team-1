@@ -1,64 +1,45 @@
-<div class="mt-4 mb-8 relative w-full h-30rem">
-    <!-- Search Panel -->
-    <p-panel [showHeader]="false">
-      <div class="flex flex-column gap-2 p-2">
-        <!-- Search Input with Autocomplete -->
-        <p-autoComplete
-          [(ngModel)]="searchQuery"
-          [suggestions]="searchResults"
-          (completeMethod)="onSearch($event)"
-          (onSelect)="selectSearchResult($event)"
-          [field]="'display_name'"
-          [dropdown]="true"
-          placeholder="Search locations..."
-          [style]="{'width':'100%'}"
-          [inputStyle]="{'width':'100%'}"
-        >
-          <ng-template let-result pTemplate="item">
-            <div class="flex align-items-center">
-              <span>{{result.display_name}}</span>
-            </div>
-          </ng-template>
-        </p-autoComplete>
-      </div>
-    </p-panel>
+<div class="mt-4 mb-4 relative h-30rem map-container">
+  <!-- Search Panel -->
+  <p-panel [showHeader]="false" *ngIf="showSearch">
+    <div class="flex flex-column gap-2 p-2">
+      <!-- Search Input with Autocomplete -->
+      <p-autoComplete [(ngModel)]="searchQuery" [suggestions]="searchResults" (completeMethod)="onSearch($event)"
+        (onSelect)="selectSearchResult($event)" [field]="'display_name'" [dropdown]="true"
+        placeholder="Search locations..." [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}">
+        <ng-template let-result pTemplate="item">
+          <div class="flex align-items-center">
+            <span>{{result.display_name}}</span>
+          </div>
+        </ng-template>
+      </p-autoComplete>
+    </div>
+  </p-panel>
 
-    <!-- Map Container -->
-    <div id="map" class="w-full h-full"></div>
+  <!-- Map Container -->
+  <div id="map" class="h-full"></div>
 
-    <!-- Legend -->
-     <div class=" absolute top-0 left-0 ml-1 divmaplegend">
-    <p-card
-      class="absolute bottom-0 left-0 w-25rem maplegend"
-    >
+  <!-- Legend -->
+  <div class=" absolute top-0 right-0 mr-1 divmaplegend" *ngIf="showLegend">
+    <p-card class="absolute bottom-0 right-0 w-25rem maplegend">
       <ng-template pTemplate="title">
         <div class="font-bold text-center">Location Types</div>
       </ng-template>
       <ng-template pTemplate="content">
         <div class="grid">
           <div class="col-6 flex align-items-center mb-2" *ngIf="showEvents">
-            <div
-              class="w-2rem h-2rem mr-2 border-round"
-              [style]="{'backgroundColor': '#ff8800'}"
-            ></div>
+            <div class="w-2rem h-2rem mr-2 border-round" [style]="{'backgroundColor': '#ff8800'}"></div>
             <span>Event</span>
           </div>
           <div class="col-6 flex align-items-center mb-2" *ngIf="showServices">
-            <div
-              class="w-2rem h-2rem mr-2 border-round"
-              [style]="{'backgroundColor': '#ff4444'}"
-            ></div>
+            <div class="w-2rem h-2rem mr-2 border-round" [style]="{'backgroundColor': '#ff4444'}"></div>
             <span>Service</span>
           </div>
           <div class="col-6 flex align-items-center mb-2" *ngIf="showProducts">
-            <div
-              class="w-2rem h-2rem mr-2 border-round"
-              [style]="{'backgroundColor': '#0fa8ab'}"
-            ></div>
+            <div class="w-2rem h-2rem mr-2 border-round" [style]="{'backgroundColor': '#0fa8ab'}"></div>
             <span>Product</span>
           </div>
         </div>
       </ng-template>
     </p-card>
-</div>
+  </div>
 </div>

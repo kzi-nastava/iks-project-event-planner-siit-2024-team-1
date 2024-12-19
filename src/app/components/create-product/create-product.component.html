@@ -2,146 +2,155 @@
     <div class="h-full w-9">
         <div class="flex w-full content surface-100 justify-content-center">
             <form [formGroup]="addProductForm" class="flex pt-4 flex-column w-full px-4">
-            <div class="field flex justify-content-center">
-                <input type="text" placeholder="Title*" name="title" formControlName="title"
-                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
-            </div>
-            <div class="field flex justify-content-center">
-                <textarea
-            formControlName="description"
-            cols="40"
-            rows="5"
-            placeholder="Description*"
-            class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 max-h-7rem surface-50"
-          ></textarea>
-            </div>
-            <div class="field flex justify-content-center">
-                <input type="text" placeholder="Specificity*" name="specificity" formControlName="specificity"
-                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
-            </div>
-            <div class="field flex justify-content-center">
-                <div class="grid">
-                    <div class="col-6">
-                        <input type="number" placeholder="Price*" name="price" formControlName="price"
+                <div class="field flex justify-content-center">
+                    <input type="text" placeholder="Title*" name="title" formControlName="title"
                         class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
-                    </div>
-                    <div class="col-6">
-                        <input type="number" placeholder="Discount*" name="discount" formControlName="discount"
+                </div>
+                <div class="field flex justify-content-center">
+                    <textarea formControlName="description" cols="40" rows="5" placeholder="Description*"
+                        class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 max-h-7rem surface-50"></textarea>
+                </div>
+                <div class="field flex justify-content-center">
+                    <input type="text" placeholder="Specificity*" name="specificity" formControlName="specificity"
                         class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
+                </div>
+                <div class="field flex justify-content-center">
+                    <div class="grid">
+                        <div class="col-6">
+                            <input type="number" placeholder="Price*" name="price" formControlName="price"
+                                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
+                        </div>
+                        <div class="col-6">
+                            <input type="number" placeholder="Discount*" name="discount" formControlName="discount"
+                                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="field flex justify-content-center">
-                <div class="col-4">
-                    <input type="text" placeholder="City*" name="city" formControlName="city"
-                    class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
+                <div class="field mb-8">
+                    <span>Choose address</span>
+                    <app-map [showSearch]="true" [showLegend]="false" (addressSelected)="onAddressSelected($event)">
+                    </app-map>
                 </div>
-                <div class="col-4">
-                    <input type="text" placeholder="Street*" name="street" formControlName="street"
-                    class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
-                </div>
-                <div class="col-4">
-                    <input type="number" placeholder="Number*" name="number" formControlName="number"
-                    class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
-                </div>
-            </div>
-            <div class="field flex justify-content-center w-full">
-                <div class="grid w-full">
-                    <div class="col-6">
-                        <p-button class="field flex justify-content-left" (onClick)="showAddCategoryForm()">Recommend new category</p-button>
-                        <p-dropdown [options]="categories" styleClass="w-full"
-                            placeholder="Category*" name="category" optionLabel="title"  
-                            [(ngModel)]="selectedCategory" [ngModelOptions]="{ standalone: true }" 
-        optionValue="id"/>
-                    </div>
-                    <div class="col-6">
-                        <p-multiSelect [options]="eventTypes" styleClass="w-full"
-                            placeholder="Event types*" name="eventTypes" filter="false" optionLabel="title" [(ngModel)]="selectedEventTypes"
-                            [ngModelOptions]="{ standalone: true }"
-                            optionLabel="title"
-                        optionValue="id"/>
-                    </div>
-                </div>   
-            </div>
-            <div class="field flex justify-content-center">
-                <div class="grid">
-                    <div class="col-4">
-                        <input type="number" placeholder="min Duration" name="minDuration" formControlName="minDuration"
-                        class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
-                    </div>
-                    <div class="col-4">
-                        <input type="number" placeholder="max Duration" name="maxDuration" formControlName="maxDuration"
-                        class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
-                    </div>
-                    <div class="col-4">
-                        <input type="number" placeholder="Duration" name="duration" formControlName="duration"
-                        class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
+                <div class="field flex justify-content-center">
+                    <div class="grid">
+                        <div class="col-4">
+                            <input formControlName="city" type="text" placeholder="City*"
+                                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50" />
+                        </div>
+                        <div class="col-4">
+                            <input formControlName="street" type="text" placeholder="Street*"
+                                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50" />
+                        </div>
+                        <div class="col-4">
+                            <input formControlName="number" type="text" placeholder="Number*"
+                                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50" />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="field flex justify-content-center">
-                <div class="grid">
-                    <div class="col-6">
-                        <input type="number" placeholder="Reservation Deadline*" name="reservationDeadline" formControlName="reservationDeadline"
-                        class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
-                    </div>
-                    <div class="col-6">
-                        <input type="number" placeholder="Cancellation Deadline*" name="cancellationDeadline" formControlName="cancellationDeadline"
-                        class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
+                <div class="field flex justify-content-center">
+                    <div class="grid">
+                        <div class="col-6">
+                            <input formControlName="latitude" type="number" placeholder="Latitude*"
+                                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50" />
+                        </div>
+                        <div class="col-6">
+                            <input formControlName="longitude" type="number" placeholder="Longitude*"
+                                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50" />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="field flex justify-content-center">
-                <div class="grid">
-                    <div class="col-5">
-                        <label>Choose reservation type</label>
+                <div class="field flex justify-content-center w-full">
+                    <div class="grid w-full">
+                        <div class="col-6">
+                            <p-button class="field flex justify-content-left"
+                                (onClick)="showAddCategoryForm()">Recommend new category</p-button>
+                            <p-dropdown [options]="categories" styleClass="w-full" placeholder="Category*"
+                                name="category" optionLabel="title" [(ngModel)]="selectedCategory"
+                                [ngModelOptions]="{ standalone: true }" optionValue="id" />
+                        </div>
+                        <div class="col-6">
+                            <p-multiSelect [options]="eventTypes" styleClass="w-full" placeholder="Event types*"
+                                name="eventTypes" filter="false" optionLabel="title" [(ngModel)]="selectedEventTypes"
+                                [ngModelOptions]="{ standalone: true }" optionLabel="title" optionValue="id" />
+                        </div>
                     </div>
-                    <div class="col-7">
-                        <div class="flex flex-wrap gap-3">
-                            <div class="flex align-items-center">
-                                <p-radioButton 
-                                    name="automaticReservation" 
-                                    value="true"
-                                    formControlName="automaticReservation"
-                                    inputId="ingredient1" />
-                                <label for="ingredient1" class="ml-2">
-                                    Automatic
-                                </label>
-                            </div>
-                            
-                            <div class="flex align-items-center">
-                                <p-radioButton 
-                                    name="automaticReservation" 
-                                    formControlName="automaticReservation"
-                                    value="false"
-                                    inputId="ingredient2" />
-                                <label for="ingredient2" class="ml-2">
-                                    Manual
-                                </label>
+                </div>
+                <div class="field flex justify-content-center">
+                    <div class="grid">
+                        <div class="col-4">
+                            <input type="number" placeholder="min Duration" name="minDuration"
+                                formControlName="minDuration"
+                                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
+                        </div>
+                        <div class="col-4">
+                            <input type="number" placeholder="max Duration" name="maxDuration"
+                                formControlName="maxDuration"
+                                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
+                        </div>
+                        <div class="col-4">
+                            <input type="number" placeholder="Duration" name="duration" formControlName="duration"
+                                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
+                        </div>
+                    </div>
+                </div>
+                <div class="field flex justify-content-center">
+                    <div class="grid">
+                        <div class="col-6">
+                            <input type="number" placeholder="Reservation Deadline*" name="reservationDeadline"
+                                formControlName="reservationDeadline"
+                                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
+                        </div>
+                        <div class="col-6">
+                            <input type="number" placeholder="Cancellation Deadline*" name="cancellationDeadline"
+                                formControlName="cancellationDeadline"
+                                class="text-base p-2 w-full border-round-top-sm border-none border-bottom-1 h-3rem surface-50">
+                        </div>
+                    </div>
+                </div>
+                <div class="field flex justify-content-center">
+                    <div class="grid">
+                        <div class="col-5">
+                            <label>Choose reservation type</label>
+                        </div>
+                        <div class="col-7">
+                            <div class="flex flex-wrap gap-3">
+                                <div class="flex align-items-center">
+                                    <p-radioButton name="automaticReservation" value="true"
+                                        formControlName="automaticReservation" inputId="ingredient1" />
+                                    <label for="ingredient1" class="ml-2">
+                                        Automatic
+                                    </label>
+                                </div>
+
+                                <div class="flex align-items-center">
+                                    <p-radioButton name="automaticReservation" formControlName="automaticReservation"
+                                        value="false" inputId="ingredient2" />
+                                    <label for="ingredient2" class="ml-2">
+                                        Manual
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="field flex justify-content-center">
-                <p-button
-                  (click)="uploader1.click()"
-                  styleClass="w-full border-noround border-1 border-primary"
-                  label="ADD SERVICE PHOTOS"
-                ></p-button>
-                <input hidden type="file" #uploader1 (change)="uploadFile($event)" />
-              
-                <div *ngIf="photosToShow.length > 0" class="mt-4">
-                  <div *ngFor="let photo of photosToShow; let i = index" class="border surface-50 p-2 rounded m-1">
-                    <img class="h-4rem w-rem" [src]="photo" alt="Loading...">
-                    <button type="button" class="p-button p-button-secondary" (click)="removePhoto(i)">Remove</button>
-                  </div>
+                <div class="field flex justify-content-center">
+                    <p-button (click)="uploader1.click()" styleClass="w-full border-noround border-1 border-primary"
+                        label="ADD SERVICE PHOTOS"></p-button>
+                    <input hidden type="file" #uploader1 (change)="uploadFile($event)" />
+
+                    <div *ngIf="photosToShow.length > 0" class="mt-4">
+                        <div *ngFor="let photo of photosToShow; let i = index"
+                            class="border surface-50 p-2 rounded m-1">
+                            <img class="h-4rem w-rem" [src]="photo" alt="Loading...">
+                            <button type="button" class="p-button p-button-secondary"
+                                (click)="removePhoto(i)">Remove</button>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              
-              
-            <p-button class="field flex justify-content-center" (onClick)="createProduct()">Submit</p-button>
-        </form>
+
+
+                <p-button class="field flex justify-content-center" (onClick)="createProduct()">Submit</p-button>
+            </form>
         </div>
     </div>
 </div>

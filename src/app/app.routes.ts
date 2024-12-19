@@ -115,13 +115,6 @@ export const routes: Routes = [
                 component: EventDetailsComponent
             },
             {
-                path: 'agenda',
-                data:{
-                    breadcrumb: null
-                },
-                component: AgendaComponent
-            },
-            {
                 path: 'category',
                 data: {
                     breadcrumb: 'Categories'
@@ -184,6 +177,13 @@ export const routes: Routes = [
                     breadcrumb: 'Favorite Services/Products'
                 },
                 component: FavoriteMerchandiseComponent
+            } ,
+            {
+                path: 'agenda/:id',
+                data: {
+                    breadcrumb: 'Agenda'
+                },
+                component: AgendaComponent
             }
         ]
     },

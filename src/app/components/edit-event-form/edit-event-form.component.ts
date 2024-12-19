@@ -20,11 +20,13 @@ import { CreateEventResponseDTO, GetProductByIdResponseDTO, GetServiceByIdRespon
 import { response } from 'express';
 import { formatDate } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { MapComponent } from '../map/map.component';
+import { AddressDTO } from '../auth/register-dtos/address.dto';
 
 @Component({
   selector: 'app-edit-event-form',
   standalone: true,
-  imports: [DropdownModule, FormsModule, MultiSelectModule, RadioButtonModule, ButtonModule, ReactiveFormsModule, CalendarModule, CheckboxModule ],
+  imports: [DropdownModule, FormsModule, MultiSelectModule,MapComponent, RadioButtonModule, ButtonModule, ReactiveFormsModule, CalendarModule, CheckboxModule ],
   templateUrl: './edit-event-form.component.html',
   styleUrl: './edit-event-form.component.scss'
 })
@@ -35,11 +37,20 @@ export class EditEventFormComponent {
     date: new FormControl<Date | null>(new Date()),
     city: new FormControl(''),
     street: new FormControl(''),
-    number: new FormControl<number | null>(1),
+    number: new FormControl<string | null>(""),
     latitude: new FormControl<number | null>(1),
     longitude: new FormControl<number | null>(1),
     maxParticipants: new FormControl<number | null>(-1)  
   })
+  onAddressSelected(address: AddressDTO) {
+    this.addEventTypeForm.patchValue({
+      city: address.city,
+      street: address.street,
+      number: address.number,
+      latitude:address.latitude,
+      longitude:address.longitude
+    });
+  }
 
   constructor(private fb: FormBuilder, private jwtService: JwtService, private serviceService: ServiceService, 
     private productService: ProductService, private eventTypeService: EventTypeService, private eventService: EventService, private route: ActivatedRoute) {

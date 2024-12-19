@@ -12,6 +12,7 @@ import { EventService } from '../event/event.service';
 import { tap } from 'rxjs';
 import { response } from 'express';
 import { CreateEventResponseDTO } from '../my-events/dtos/CreateEventResponse.dto';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-agenda',
@@ -23,22 +24,26 @@ import { CreateEventResponseDTO } from '../my-events/dtos/CreateEventResponse.dt
 export class AgendaComponent {
   displayAddForm: boolean = false;
   displayEditForm: boolean = false;
-  event!: CreateEventResponseDTO 
+  event!: CreateEventResponseDTO ;
 
-  activities: ActivityOverviewDTO[] = []
-  selectedActivity!: ActivityOverviewDTO 
+  activities: ActivityOverviewDTO[] = [];
+  selectedActivity!: ActivityOverviewDTO ;
+  eventId!:number;
 
-  constructor(private eventService: EventService){}
+  constructor(private eventService: EventService,private route:ActivatedRoute){}
 
   ngOnInit(){
     this.loadData();
   }
 
+
   loadData(): void{
-    this.eventService.getById(history.state.eventId).pipe(tap(response => {
+    const id = this.route.snapshot.paramMap.get('id');
+    this.eventId = id ? Number(id) : -1;
+    this.eventService.getById(this.eventId).pipe(tap(response => {
       this.event = response
     })).subscribe()
-    this.eventService.getAgenda(history.state.eventId).pipe(tap(response => {
+    this.eventService.getAgenda(this.eventId).pipe(tap(response => {
       this.activities = response
     })).subscribe()
   }
@@ -53,7 +58,7 @@ export class AgendaComponent {
   }
 
   onDelete(activityId: number): void {
-    this.eventService.deleteActivity(history.state.eventId, activityId).pipe(tap(response => {
+    this.eventService.deleteActivity(this.eventId, activityId).pipe(tap(response => {
       
     })).subscribe()
   }

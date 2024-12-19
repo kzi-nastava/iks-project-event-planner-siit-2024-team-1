@@ -27,9 +27,7 @@ export class EventCardComponent{
   constructor(private router: Router){}
 
   showAgenda(eventId: number){
-    this.router.navigate(['home/agenda'], {
-      state: {eventId: eventId} 
-    })
+    this.router.navigate(['home/agenda',eventId]);
   }
 
   showEditEventForm(eventId: number){

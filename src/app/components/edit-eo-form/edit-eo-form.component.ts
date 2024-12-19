@@ -9,11 +9,13 @@ import { CommonModule } from '@angular/common';
 import { JwtService } from '../auth/jwt.service';
 import { tap } from 'rxjs';
 import { UpdateEoDto } from '../auth/update-dtos/register-dtos/UpdateEo.dto';
+import { MapComponent } from '../map/map.component';
+import { AddressDTO } from '../auth/register-dtos/address.dto';
 
 @Component({
   selector: 'app-edit-eo-form',
   standalone: true,
-  imports: [ButtonModule, ReactiveFormsModule, FileUploadModule, ToastModule, CommonModule],
+  imports: [ButtonModule, ReactiveFormsModule, FileUploadModule, ToastModule, CommonModule,MapComponent],
   templateUrl: './edit-eo-form.component.html',
   styleUrl: './edit-eo-form.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -26,12 +28,23 @@ export class EditEoFormComponent {
     surname: new FormControl(''),
     city: new FormControl(''),
     street: new FormControl(''),
-    number: new FormControl<number | null>(1),
+    number: new FormControl<string | null>(""),
     latitude: new FormControl<number | null>(1),
     longitude: new FormControl<number | null>(1),
     phone: new FormControl(''),
     email: new FormControl({value: '', disabled: true}),
   })
+
+  onAddressSelected(address: AddressDTO) {
+      this.registerForm.patchValue({
+        city: address.city,
+        street: address.street,
+        number: address.number,
+        latitude:address.latitude,
+        longitude:address.longitude
+      });
+    }
+  
   
   constructor(private router: Router, private jwtService: JwtService){}
 

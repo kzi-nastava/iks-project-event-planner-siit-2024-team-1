@@ -8,11 +8,13 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ActivityOverviewDTO, CreateActivityDTO } from '../agenda/activity-overview.dto';
 import { EventService } from '../event/event.service';
 import { tap } from 'rxjs';
+import { MapComponent } from '../map/map.component';
+import { AddressDTO } from '../auth/register-dtos/address.dto';
 
 @Component({
   selector: 'app-edit-activity-form',
   standalone: true,
-  imports: [DropdownModule, FormsModule, MultiSelectModule, RadioButtonModule, ButtonModule, ReactiveFormsModule, CalendarModule],
+  imports: [DropdownModule, FormsModule, MultiSelectModule, RadioButtonModule,MapComponent, ButtonModule, ReactiveFormsModule, CalendarModule],
   templateUrl: './edit-activity-form.component.html',
   styleUrl: './edit-activity-form.component.scss'
 })
@@ -27,10 +29,19 @@ export class EditActivityFormComponent {
     end: new FormControl<Date | null>(new Date()),
     city: new FormControl(''),
     street: new FormControl(''), 
-    number: new FormControl<number | null | undefined>(1), 
+    number: new FormControl<string | null | undefined>(""), 
     latitude: new FormControl<number | null | undefined>(1), 
     longitude: new FormControl<number | null | undefined>(1), 
   });
+  onAddressSelected(address: AddressDTO) {
+    this.addActivityForm.patchValue({
+      city: address.city,
+      street: address.street,
+      number: address.number,
+      latitude:address.latitude,
+      longitude:address.longitude
+    });
+  }
 
   constructor(private fb: FormBuilder, private eventService: EventService) {
     

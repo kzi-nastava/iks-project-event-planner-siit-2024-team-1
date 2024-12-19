@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
@@ -9,11 +9,13 @@ import { EventService } from '../event/event.service';
 import { CreateActivityDTO } from '../agenda/activity-overview.dto';
 import { response } from 'express';
 import { tap } from 'rxjs';
+import { MapComponent } from '../map/map.component';
+import { AddressDTO } from '../auth/register-dtos/address.dto';
 
 @Component({
   selector: 'app-create-activity-form',
   standalone: true,
-  imports: [DropdownModule, FormsModule, MultiSelectModule, RadioButtonModule, ButtonModule, ReactiveFormsModule, CalendarModule],
+  imports: [DropdownModule, FormsModule, MultiSelectModule, RadioButtonModule, ButtonModule, ReactiveFormsModule, CalendarModule,MapComponent],
   templateUrl: './create-activity-form.component.html',
   styleUrl: './create-activity-form.component.scss'
 })
@@ -25,11 +27,10 @@ export class CreateActivityFormComponent {
     end: new FormControl<Date | null>(new Date()),
     city: new FormControl(''),
     street: new FormControl(''), 
-    number: new FormControl<number | null | undefined>(1), 
+    number: new FormControl<string | null | undefined>(""), 
     latitude: new FormControl<number | null | undefined>(1), 
     longitude: new FormControl<number | null | undefined>(1), 
   });
-
   constructor(private fb: FormBuilder, private eventService: EventService) {
     
   }
@@ -52,4 +53,13 @@ export class CreateActivityFormComponent {
       console.log(response)
     })).subscribe()
   }
+  onAddressSelected(address: AddressDTO) {
+      this.addActivityForm.patchValue({
+        city: address.city,
+        street: address.street,
+        number: address.number,
+        latitude:address.latitude,
+        longitude:address.longitude
+      });
+    }
 }
