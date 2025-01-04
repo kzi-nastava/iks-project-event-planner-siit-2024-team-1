@@ -20,7 +20,7 @@ export class SideMenuComponent {
   username!: string;
   email!: string;
   photo!: string;
-  role!: string;
+  role: string = '';
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: object,

@@ -3,7 +3,7 @@ import { jwtDecode } from 'jwt-decode';
 
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { TokensDto } from './tokens.dto';
 import { LoginDTO } from '../login-form/login.dto';
@@ -23,18 +23,15 @@ import { ChangePasswordDto } from './update-dtos/register-dtos/ChangePassword.dt
 import { ChangePasswordResponseDto } from './update-dtos/register-dtos/ChangePasswordResponse.dto';
 import { EventToken } from './event-token';
 import { NotificationService } from '../sidebar-notifications/notification.service';
+import { env } from 'process';
+import { RefreshTokenDto } from './refresh-token.dto';
+import { Token } from 'html2canvas/dist/types/css/syntax/tokenizer';
 
 @Injectable({
   providedIn: 'root',
 })
 export class JwtService {
   constructor(private httpClient: HttpClient, private router: Router) { }
-  setTokens(tokens: TokensDto): void {
-    if (this.isLocalStorageAvailable()) {
-      localStorage.setItem('access_token', tokens.accessToken);
-      localStorage.setItem('refresh_token', tokens.refreshToken);
-    }
-  }
 
   setEventToken(token: EventToken): void {
     localStorage.setItem("event_token", token.eventToken);
@@ -204,30 +201,17 @@ export class JwtService {
       localStorage.removeItem('refresh_token');
     }
   }
+  refreshToken(refreshToken: string): Observable<TokensDto> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${refreshToken}`, // Add the refresh token to Authorization header
+    });
 
-  refreshAccessToken(): Observable<any> {
-    const refreshToken = this.isLocalStorageAvailable() ? localStorage.getItem('refresh_token') || '' : '';
-    const accessToken = this.isLocalStorageAvailable() ? localStorage.getItem('access_token') || '' : '';
+    return this.httpClient.post<TokensDto>(`${environment.apiUrl}auth/refresh_token`,{}, {headers});
+  }
   
-    const url = `${environment.apiUrl}/auth/refreshToken`;
-  
-    const token: TokensDto = {
-      accessToken,
-      refreshToken,
-    };
-    return this.httpClient.post<TokensDto>(url, token).pipe(
-      tap((response) => {
-        if (this.isLocalStorageAvailable()) {
-          localStorage.setItem('access_token', response.accessToken);
-          localStorage.setItem('refresh_token', response.refreshToken);
-        }
-      }),
-      catchError((error) => {
-        this.router.navigate(['/auth/login']);
-        console.error('Error refreshing access token:', error);
-        return throwError(error);
-      })
-    );
+  setTokens(response: { accessToken: string; refreshToken: string }): void {
+    localStorage.setItem('access_token', response.accessToken);
+    localStorage.setItem('refresh_token', response.refreshToken);
   }
 
   private isLocalStorageAvailable(): boolean {

@@ -33,7 +33,7 @@ export class EventDetailsComponent {
   isFavorited: boolean = false;
   eventId!: number
 
-  role!: string;
+  role: string = '';
 
   participants: any[] = [];
   reviews: any[] = [];
@@ -153,7 +153,7 @@ export class EventDetailsComponent {
       .pipe(
         tap((response) => {
           this.participants = response.participants;
-
+          this.role = this.jwtService.getRoleFromToken();
           // Prepare chart data for reviews
           const ratings = response.reviews.map((review: any) => review.rating);
   

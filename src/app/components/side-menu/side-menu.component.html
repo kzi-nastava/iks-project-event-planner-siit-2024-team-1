@@ -104,6 +104,7 @@
         styleClass="w-full justify-content-left pl-3 border-round-right-xl h-3rem mb-2 text-color hover:surface-hover"
         [text]="true"
         [routerLink]="'/home/followed-events'"
+        *ngIf="this.role != ''"
       >
         <ng-template pTemplate="content">
           <i class="pi pi-objects-column mr-4" style="font-size: 1rem"></i>
@@ -114,6 +115,7 @@
         styleClass="w-full justify-content-left pl-3 border-round-right-xl h-3rem mb-2 text-color hover:surface-hover"
         [text]="true"
         [routerLink]="['/home/messenger', -1]"
+        *ngIf="this.role != ''"
       >
         <ng-template pTemplate="content">
           <i class="pi pi-objects-column mr-4" style="font-size: 1rem"></i>
@@ -146,6 +148,7 @@
         styleClass="w-full justify-content-left pl-3 border-round-right-xl h-3rem mb-2 text-color hover:surface-hover"
         [text]="true"
         [routerLink]="'/home/favorite-events'"
+        *ngIf="this.role != ''"
       >
         <ng-template pTemplate="content">
           <i class="pi pi-objects-column mr-4" style="font-size: 1rem"></i>
@@ -156,6 +159,7 @@
         styleClass="w-full justify-content-left pl-3 border-round-right-xl h-3rem mb-2 text-color hover:surface-hover"
         [text]="true"
         [routerLink]="'/home/favorite-merchandise'"
+        *ngIf="this.role != ''"
       >
         <ng-template pTemplate="content">
           <i class="pi pi-objects-column mr-4" style="font-size: 1rem"></i>

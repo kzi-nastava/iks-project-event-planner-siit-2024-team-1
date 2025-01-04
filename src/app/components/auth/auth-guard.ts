@@ -7,29 +7,20 @@ import {
 } from '@angular/router';
 import { JwtService } from './jwt.service';
 
-
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  constructor(
-    private router: Router,
-    private authService: JwtService
-  ) {}
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-  ): boolean {
-    const userRole = this.authService.getRoleFromToken();
+  constructor(private jwtService: JwtService, private router: Router) { }
 
-    if (userRole == null) {
-      this.router.navigate(['login']);
+  canActivate(): boolean {
+    if (this.jwtService.IsLogged()) {
+      return true;
+    } else {
+      this.router.navigate(['']);
       return false;
     }
-    if (!route.data['role'].includes(userRole)) {
-      this.router.navigate(['home']);
-      return false;
-    }
-    return true;
   }
 }
+

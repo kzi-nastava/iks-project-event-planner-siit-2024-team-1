@@ -2,7 +2,7 @@
     <div class="flex justify-content-between align-items-center p-8 pb-0 mt-8">
         <div class="flex align-items-center">
             <h2 class="m-0 mr-2">{{product!.title}}</h2>
-            <p-button [icon]="isStarFilled ? 'pi pi-star-fill' : 'pi pi-star'" class="custom-button" (onClick)="addToFavorite()"></p-button>
+            <p-button *ngIf="this.role != ''" [icon]="isStarFilled ? 'pi pi-star-fill' : 'pi pi-star'" class="custom-button" (onClick)="addToFavorite()"></p-button>
         </div>
         <div class="flex align-items-end">
             <div class="flex flex-column mr-3">

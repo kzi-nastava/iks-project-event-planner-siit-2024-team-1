@@ -33,6 +33,12 @@ import { EditActivityFormComponent } from './components/edit-activity-form/edit-
 import { CreateActivityFormComponent } from './components/create-activity-form/create-activity-form.component';
 import { BudgetComponent } from './components/budget/budget.component';
 import { PriceListComponent } from './components/price-list/price-list.component';
+import { AuthGuard } from './components/auth/auth-guard';
+import { EoGuard } from './components/auth/eo-guard';
+import { SpGuard } from './components/auth/sp-guard';
+import { AdminGuard } from './components/auth/admin-guard';
+import { AuGuard } from './components/auth/au-guard';
+import { GuestGuard } from './components/auth/guest-guard';
 
 
 export const routes: Routes = [
@@ -61,56 +67,64 @@ export const routes: Routes = [
                 data:{
                     breadcrumb:'My services'
                 },
-                component: ServiceCrudComponent
+                component: ServiceCrudComponent,
+                canActivate: [AuthGuard, SpGuard]
             },
             {
                 path: 'my_products',
                 data:{
                     breadcrumb:'My products'
                 },
-                component: ProductsCrudComponent
+                component: ProductsCrudComponent,
+                canActivate: [AuthGuard, SpGuard]
             },
             {
                 path: 'edit-product/:id',
                 data:{
                     breadcrumb: null
                 },
-                component: UpdateProductComponent
+                component: UpdateProductComponent,
+                canActivate: [AuthGuard, SpGuard]
             },
             {
                 path: 'create-product',
                 data:{
                     breadcrumb: null
                 },
-                component: CreateProductComponent
+                component: CreateProductComponent,
+                canActivate: [AuthGuard, SpGuard]
             },
             {
                 path: 'my_events',
                 data:{
                     breadcrumb:'My events'
                 },
-                component: MyEventsComponent
+                component: MyEventsComponent,
+                canActivate: [AuthGuard, EoGuard]
             },
             {
                 path: 'event-types',
                 data:{
                     breadcrumb:'Event Types'
                 },
-                component: EventTypesComponent
+                component: EventTypesComponent,
+                canActivate: [AuthGuard, AdminGuard]
             },
             {
                 path: 'create-event',
                 data:{
                     breadcrumb: null
                 },
-                component: CreateEventFormComponent
+                component: CreateEventFormComponent,
+                canActivate: [AuthGuard, EoGuard]
             },
             {
                 path: 'edit-event/:id',
                 data:{
                     breadcrumb: null
                 },
-                component: EditEventFormComponent
+                component: EditEventFormComponent,
+                canActivate: [AuthGuard, EoGuard]
             },
             {
                 path: 'event-details/:id',
@@ -124,7 +138,8 @@ export const routes: Routes = [
                 data: {
                     breadcrumb: 'Categories'
                 },
-                component: CategoryCrudComponent
+                component: CategoryCrudComponent,
+                canActivate: [AuthGuard, AdminGuard]
             }
             ,
             {
@@ -146,42 +161,48 @@ export const routes: Routes = [
                 data: {
                     breadcrumb: 'Followed Events'
                 },
-                component: FollowedEventsComponent
+                component: FollowedEventsComponent,
+                canActivate: [AuthGuard]
             },
             {
                 path: 'messenger/:serviceProviderId',
                 data: {
                     breadcrumb: 'Messenger'
                 },
-                component: MessagingPageComponent
+                component: MessagingPageComponent,
+                canActivate: [AuthGuard]
             },
             {
                 path: 'admin-user-reports',
                 data: {
                     breadcrumb: 'User Reports'
                 },
-                component: AdminUserReportsComponent
+                component: AdminUserReportsComponent,
+                canActivate: [AuthGuard, AdminGuard]
             },
             {
                 path: 'admin-reviews',
                 data: {
                     breadcrumb: 'Reviews'
                 },
-                component: AdminReviewsComponent
+                component: AdminReviewsComponent,
+                canActivate: [AuthGuard, AdminGuard]
             },
             {
                 path: 'favorite-events',
                 data: {
                     breadcrumb: 'Favorite Events'
                 },
-                component: FavoriteEventsComponent
+                component: FavoriteEventsComponent,
+                canActivate: [AuthGuard]
             },
             {
                 path: 'favorite-merchandise',
                 data: {
                     breadcrumb: 'Favorite Services/Products'
                 },
-                component: FavoriteMerchandiseComponent
+                component: FavoriteMerchandiseComponent,
+                canActivate: [AuthGuard]
             } ,
             {
                 path: 'agenda/:id',
@@ -195,38 +216,42 @@ export const routes: Routes = [
                 data: {
                     breadcrumb: 'Agenda'
                 },
-                component: CreateActivityFormComponent
+                component: CreateActivityFormComponent,
+                canActivate: [AuthGuard, EoGuard]
             },
             {
                 path: 'agenda/edit/:activityId',
                 data: {
                     breadcrumb: 'Agenda'
                 },
-                component: EditActivityFormComponent
+                component: EditActivityFormComponent,
+                canActivate: [AuthGuard, EoGuard]
             },
             {
                 path: 'budget/:eventId',
                 data: {
                     breadcrumb: "Budget"
                 },
-                component: BudgetComponent
+                component: BudgetComponent,
+                canActivate: [AuthGuard] // ne znam ko sme
             },
             {
                 path: 'price-list',
                 data: {
                     breadcrumb: "Price List"
                 },
-                component: PriceListComponent
+                component: PriceListComponent,
+                canActivate: [AuthGuard, SpGuard, AdminGuard]
             }
         ]
     },
     { path: '', component: LoginFormComponent},
-    { path: 'change-password/:id', component: ChangePasswordComponent},
+    { path: 'change-password/:id', component: ChangePasswordComponent, canActivate: [AuthGuard]},
     { path: 'register-au', component: FastRegisterComponent},
     { path: 'register-eo', component: RegisterEoFormComponent},
     { path: 'register-sp', component: RegisterSpFormComponent},
-    { path: 'edit-au/:id', component: EditAuFormComponent},
-    { path: 'edit-eo/:id', component: EditEoFormComponent},
-    { path: 'edit-sp/:id', component: EditSpFormComponent},
+    { path: 'edit-au/:id', component: EditAuFormComponent, canActivate: [AuthGuard, AuGuard]},
+    { path: 'edit-eo/:id', component: EditEoFormComponent, canActivate: [AuthGuard, EoGuard]},
+    { path: 'edit-sp/:id', component: EditSpFormComponent, canActivate: [AuthGuard, SpGuard]},
     
 ];

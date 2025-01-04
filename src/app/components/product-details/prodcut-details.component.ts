@@ -32,6 +32,8 @@ export class ProdcutDetailsComponent implements OnInit {
   popupMessage = '';
   product: MerchandiseDetailDTO | null = null;
   isStarFilled: boolean = false;
+  role: string = '';
+
   images: any[] = [];
   paginatedReviews: any | undefined;
   responsiveOptions: any[] = [
@@ -53,11 +55,14 @@ export class ProdcutDetailsComponent implements OnInit {
                 private router: Router, 
                 private merchandiseService: MerchandiseService, 
                 private productService: ProductService,
-              private mapService:MapService) {}
+              private mapService:MapService,
+            private jwtService: JwtService) {}
   
     ngOnInit() {
       const productId = this.route.snapshot.paramMap.get('productId');
       this.productId = productId ? Number(productId) : -1;
+
+      this.role = this.jwtService.getRoleFromToken();
 
       const eventId = this.route.snapshot.paramMap.get('eventId');
       this.eventId = eventId ? Number(eventId) : -1;
